@@ -10,7 +10,7 @@ const Color accentColor = Colors.orangeAccent;
 
 const String defaultProfileImage = "assets/images/default_profile.png";
 
-const int catApiFetchLimit = 10;
+const int catApiFetchLimit = 25;
 
 typedef AppTextStyle = TextStyle;
 

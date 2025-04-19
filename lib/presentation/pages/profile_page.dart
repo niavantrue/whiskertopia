@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../data/services/local_storage.dart';
 import '../../data/models/post.dart';
 import '../widgets/profile_header.dart';
+import '../widgets/post_card.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -16,16 +17,24 @@ class _ProfilePageState extends State<ProfilePage> {
   int _followers = 120;
   int _following = 80;
   String _bio = "Sharing pictures of cats i found anywhere!";
+  int? _selectedPostIndex;
+  bool _showFullView = false;
+  List<Post> _posts = [];
 
   @override
   void initState() {
     super.initState();
-    _loadLocalPosts();
+    _localPosts = _localStorageService.getLocalPosts().then((posts) {
+      _posts = posts; // Initialize _posts when data is loaded
+      return posts;
+    });
   }
 
-  void _loadLocalPosts() {
+  Future<void> _loadLocalPosts() async {
+    final posts = await _localStorageService.getLocalPosts();
     setState(() {
-      _localPosts = _localStorageService.getLocalPosts();
+      _posts = posts;
+      _localPosts = Future.value(posts);
     });
   }
 
@@ -34,8 +43,41 @@ class _ProfilePageState extends State<ProfilePage> {
     _loadLocalPosts();
   }
 
+  void _openPostView(int index) {
+    setState(() {
+      _selectedPostIndex = index;
+      _showFullView = true;
+    });
+  }
+
+  void _closePostView() {
+    setState(() {
+      _showFullView = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (_showFullView) {
+      return Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: _closePostView,
+          ),
+        ),
+        body: _posts.isEmpty
+            ? const Center(child: Text('No posts to display'))
+            : PageView.builder(
+                controller: PageController(initialPage: _selectedPostIndex ?? 0),
+                itemCount: _posts.length,
+                itemBuilder: (context, index) {
+                  return PostCard(post: _posts[index]);
+                },
+              ),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -95,14 +137,17 @@ class _ProfilePageState extends State<ProfilePage> {
                         return GridView.builder(
                           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 3,
-                            crossAxisSpacing: 2,
-                            mainAxisSpacing: 2,
+                            crossAxisSpacing: 1,
+                            mainAxisSpacing: 1,
                           ),
                           itemCount: posts.length,
                           itemBuilder: (context, index) {
-                           return posts[index].localImage != null
-                                ? Image.file(posts[index].localImage!, fit: BoxFit.cover)
-                                : Image.network(posts[index].imageUrl, fit: BoxFit.cover);
+                            return GestureDetector(
+                              onTap: () => _openPostView(index),
+                              child: posts[index].localImage != null
+                                  ? Image.file(posts[index].localImage!, fit: BoxFit.cover)
+                                  : Image.network(posts[index].imageUrl, fit: BoxFit.cover),
+                            );
                           },
                         );
                       },

@@ -61,15 +61,6 @@ class _AddPostPageState extends State<AddPostPage> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => const MainScreen()),
-            );
-          },
-        ),
         title: const Text(
           'New Post',
           style: TextStyle(fontWeight: FontWeight.bold),

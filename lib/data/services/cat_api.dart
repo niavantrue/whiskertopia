@@ -5,7 +5,7 @@ import '../../core/constants.dart';
 
 class CatApiService {
   Future<List<Post>> fetchCatPosts({int limit = catApiFetchLimit}) async {
-    final response = await http.get(Uri.parse('$catApiBaseUrl?limit=$limit'));
+    final response = await http.get(Uri.parse('$catApiBaseUrl?limit=$limit&api_key=$catApiKey'));
     
     if (response.statusCode == 200) {
       List<dynamic> data = jsonDecode(response.body);

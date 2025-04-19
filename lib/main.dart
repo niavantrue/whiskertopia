@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 import 'presentation/pages/home_page.dart';
 import 'presentation/pages/add_post_page.dart';
 import 'presentation/pages/profile_page.dart';
+import 'presentation/pages/explore_page.dart';
+import 'presentation/pages/reels_page.dart';
 import 'presentation/providers/post_provider.dart';
 
 void main() {
@@ -36,9 +38,9 @@ class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
   final List<Widget> _pages = [
     const HomePage(),
-    const Placeholder(),
+    const ExplorePage(),
     const AddPostPage(),
-    const Placeholder(),
+    const ReelsPage(),
     const ProfilePage(),
   ];
 

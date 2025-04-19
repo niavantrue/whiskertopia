@@ -19,8 +19,8 @@ class PostCard extends StatelessWidget {
             child: Row(
               children: [
                 const CircleAvatar(
-                   backgroundColor: Color.fromARGB(255, 223, 222, 222),
-                   child: Icon(Icons.person),
+                  backgroundColor: Color.fromARGB(255, 223, 222, 222),
+                  child: Icon(Icons.person),
                 ),
                 const SizedBox(width: 8),
                 Text(post.username, style: const TextStyle(fontWeight: FontWeight.bold)),
@@ -43,16 +43,13 @@ class PostCard extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                IconButton(
-                  icon: const Icon(Icons.favorite_border),
-                  onPressed: () {},
-                ),
+                FavoriteButton(),
                 IconButton(
                   icon: const Icon(Icons.mode_comment_outlined),
                   onPressed: () {},
                 ),
                 IconButton(
-                  icon: ImageIcon(AssetImage('assets/icons/send.png'), color: Colors.black),
+                  icon: const ImageIcon(AssetImage('assets/icons/send.png'), color: Colors.black),
                   onPressed: () {},
                 ),
                 const Spacer(),
@@ -84,6 +81,37 @@ class PostCard extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class FavoriteButton extends StatefulWidget {
+  const FavoriteButton({super.key});
+
+  @override
+  State<FavoriteButton> createState() => _FavoriteButtonState();
+}
+
+class _FavoriteButtonState extends State<FavoriteButton> {
+  bool _isFavorited = false;
+  void _toggleFavorite() {
+    setState(() {
+      if (_isFavorited) {
+        _isFavorited = false;
+      } else {
+        _isFavorited = true;
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      icon: Icon(
+        _isFavorited ? Icons.favorite : Icons.favorite_border,
+        color: _isFavorited ? Colors.red : null,
+      ),
+      onPressed: _toggleFavorite,
     );
   }
 }
